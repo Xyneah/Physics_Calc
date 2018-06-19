@@ -11,7 +11,7 @@ var endParen = function(string, stringLoc){
         else if (string[i] == ')'){
 	    endParen++;
 	    if (endParen == beginParen){
-		endLoc = i+1;
+		endLoc = i;
 		break;
 	    }
 	}
@@ -23,7 +23,8 @@ var endParen = function(string, stringLoc){
     return(endLoc);
 }
 
-var stringy = "5*((1/2)+sin(2*pi*(5+4))+7)";
+/*
+var stringy = "5*((1/(2+3))+sin(2*pi*(5+4))+7)";
 
 console.log(stringy);
 for (var i = 0; i < stringy.length; i++){
@@ -32,7 +33,7 @@ for (var i = 0; i < stringy.length; i++){
     }
 }
 
-
+*/
 
 var rmSpaces = function(string){
   var tempStr = "";
@@ -53,10 +54,14 @@ var slashToOver = function(string){
 		string = string.slice(0,i).concat('\\over{',
 		string.slice(i+1, i+2), '}', string.slice(i+2, string.length));
 	    }
-	}
-	else{
-	    string = string.replace('/(', '\\over{');
+	    else{
+		var endPar = endParen(string, i);
+		string = string.slice(0, endPar).concat('}',
+			 string.slice(endPar+1, string.length));
+		string = string.replace('/(', '\\over{');
+	    }
 	}
     }
     return(string);
 }
+
