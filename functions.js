@@ -5,26 +5,40 @@
    it works. LET THE FUNCTIONS BEGIN!
 */
 
-/* function tag template */
-
 /*
    =======================================================
-   Description
+   rmSpaces is a cute function that does exactly what it 
+   sounds like it does; removes spaces from a string.
 
    INPUT:
+   STRING (string) - a string with spaces
    
    RETURNS:
-   
+   STRING (string) -the same string but without spaces
+
    ~~~~~~Functions and  Methods to learn more about~~~~~~
+   None! I told you it was cute.
    
    =======================================================
 */
 
-
-
-
-
-
+var rmSpaces = function(string){
+  /* tempStr is an empty string that will house every
+     character from string that is not a space */
+  var tempStr = "";
+    
+  /* looping through the string and checking to see
+     if each character is a space. If it is, it is 
+     added to tempStr. If not, it moves on to the 
+     next character without doing anything. */
+  for(var char of string){
+    if (char != ' '){
+      tempStr += char;
+    }
+  }
+  string = tempStr;
+  return(string);
+}
 
 
 
@@ -66,7 +80,7 @@ var endParen = function(string, stringLoc){
     var i = stringLoc; /* start the iteration at location of interest */ 
 
     /* checking for viable strLoc */
-    if (stringLoc > string.length){
+    if ( (stringLoc > string.length) || (stringLoc < 0) ){
 	console.log("stringLoc is out of bounds");
 	return(null);
     }
@@ -75,8 +89,7 @@ var endParen = function(string, stringLoc){
        is incremented. If the character is ')', endParenth is incremented,
        and then it is compared to beginParen. If they are equal, the 
        correct ending parenthesis is found. Its location is stored in
-       endLoc and returned.
-    */
+       endLoc and returned. */
     for(i; i < string.length ; i++){
 	if (string[i] == '(') {
 	    beginParenth++;
@@ -92,8 +105,7 @@ var endParen = function(string, stringLoc){
     }
     
     /* If the function gets here, it means the string has been fully 
-       iterated without finding the correct ending parenthasis.
-    */
+       iterated without finding the correct ending parenthasis. */
     if (endLoc == null){
 	console.log("end parenthasis not found");
 	return(null);
@@ -101,62 +113,109 @@ var endParen = function(string, stringLoc){
 }
 
 
+
+
 /*
-console.log("~~~Test Script for endParen~~~");
+   =======================================================
+   beginParen is almost identical to endParen. The only
+   difference is that it takes a location in a string and
+   works backwards to find the first matching beginning
+   parenthasis. It will also return null if boundary 
+   conditions are not met, and returns the location of
+   the matching parenthasis.
 
-var stringx = "3/(4+(5-2)";
+   INPUT:
+   STRING (string) - to parse for beginning parenthasis
+   INT (stringLoc) - location to begin parsing from
 
-var stringy = "5*((1/23)+sin(2*pi*(5+4))+7)";
+   RETURNS:
+   INT (beginLoc) - location of beginning parenthasis
 
-console.log("\nTesting case of mismatched parenthases:");
-console.log("stringx: " + stringx);
-console.log(endParen(stringx, 2) + "\n");
+   *OR*
 
-console.log("Testing case where strLoc (500) is way out of bounds:");
-console.log("stringy" + stringy);
-console.log(endParen(stringy, 500) + "\n");
+   null - if either stringLoc is out of bounds or no
+          matching beginning parenthasis is found
 
+   ~~~~~~Functions and  Methods to learn more about~~~~~~
+   String Property: length
+   https://www.w3schools.com/Jsref/jsref_length_string.asp
 
-console.log("\nTesting how endParen does parsing a string with " +
-	    "many layers of parenthasies by \niterating through " +
-	    "stringy. If a '(' is read, displays its end parenthais\n" +
-	    "along with everything in the middle.\n");
-console.log("stringy: " + stringy);
-for (var i = 0; i < stringy.length; i++){
-    if (stringy[i] == '('){
-	console.log(stringy.slice(i, endParen(stringy, i)+1));
-    }
-}
+   =======================================================
 */
 
-
-
-
-
-
-var rmSpaces = function(string){
-  var tempStr = "";
-  for(var char of string){
-    if (char != ' '){
-      tempStr += char;
+var beginParen = function(string, stringLoc){
+    var beginParenth = 0;
+    var endParenth = 0;
+    var beginLoc;
+    var i = stringLoc;
+    if ( (stringLoc > string.length) || (stringLoc < 0) ){
+	console.log("stringLoc is out of bounds");
+	return(null);
     }
-  }
-  string = tempStr;
-  return(string);
+    /* Instead of incrementing to the end of the string, 
+       we decrement to the beginning of the string to
+       find the beginning parenthasis */
+    for(i; i >= 0; i--){
+	if (string[i] == ')') {
+	    endParenth++;
+	}
+	else if (string[i] == '(') {
+	    beginParenth++;
+	    if (beginParenth == endParenth){
+		beginLoc = i;
+		return(beginLoc);
+	    }
+	}
+    }
+    console.log("beginning parenthesis not found");
+    return(null);
 }
 
 var slashToOver = function(string){
+    var numerator;
+    var denominator;
     var i = 0;
-    var d;
+    for(i; i < string.length; i++){
+	if (string[i] == '/'){
+	    if(string[i-1] != ')'){
+		numerator = string[i-2];
+	    }
+	    else{
+		
+    
+
+
+/* function tag template */
+
+/*
+   =======================================================
+   Description
+
+   INPUT:
+   
+   RETURNS:
+   
+   ~~~~~~Functions and  Methods to learn more about~~~~~~
+   
+   =======================================================
+*/
+
+/* CODE GRAVEYARD SPOOOOOKY! */
+
+/*
+var slashToOver = function(string){
+    var i = 0;
+    var digit;
     var offset;
+    var endPar;
     
     for(i; i < string.length; i++){
 	if ( string[i] == '/'){
 	    if (string[i+1] != '('){
 		offset = 0;
-		d = i+1;
-		for(d; d < string.length; d++){
-		    if(!isNaN(string[d]) ){
+		digit = i+1;
+		for(digit; digit < string.length; digit++){
+		    if(!isNaN(string[digit]) ){
 			offset++;
 		    }
 		    else {
@@ -169,7 +228,7 @@ var slashToOver = function(string){
 		string.slice(i+offset, string.length));
 	    }
 	    else{
-		var endPar = endParen(string, i);
+		endPar = endParen(string, i);
 		string = string.slice(0, endPar).concat('}',
 			 string.slice(endPar+1, string.length));
 		string = string.replace('/(', '\\over{');
@@ -178,10 +237,4 @@ var slashToOver = function(string){
     }
     return(string);
 }
-
-/*
-var stringy = "x/2 + y/4 + z/1333333336";
-stringy = rmSpaces(stringy);
-console.log(stringy);
-console.log(slashToOver(stringy));
 */
