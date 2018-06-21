@@ -129,7 +129,7 @@ var endParen = function(string, stringLoc){
    INT (stringLoc) - location to begin parsing from
 
    RETURNS:
-   INT (beginLoc) - location of beginning parenthasis
+   INT (beginLoc) - location of beging parenthasis
 
    *OR*
 
@@ -171,6 +171,57 @@ var beginParen = function(string, stringLoc){
     return(null);
 }
 
+var chunkSize = function(string, stringLoc, direction){
+    var size = 0;
+    var i = stringLoc;
+    if (direction == 'forward'){
+	for (i; i < string.length; i++){
+	    if (string[i] == '('){
+		size += endParen(string, i) - i + 1;
+		i = endParen(string, i);
+	    }
+	    else if( (string[i] == '+') || (string[i] == '-') ||
+		     (string[i] == '/') || (string[i] == '*')  ){
+		break;
+	    }
+	    else{
+		size++;
+	    }
+	}
+	return(size);
+    }
+    if (direction == 'backward'){
+	for(i; i >= 0; i--){
+	    if (string[i] == ')'){
+		size += i - beginParen(string, i) + 1;			    
+		i = beginParen(string, i);
+	    }
+	    else if( (string[i] == '+') || (string[i] == '-') ||
+		     (string[i] == '/') || (string[i] == '*') ){
+		break;
+	    }
+	    else{
+		size++;
+	    }
+	}
+	return(size);
+    }
+    console.log("Something went wrong");
+    return(null);
+}
+
+stringy = "2+sin(3+(4+pi))+23";
+console.log(stringy);
+console.log(stringy.slice(2, 2+chunkSize(stringy, 2,'forward')) + ' is ' + chunkSize(stringy, 2,'forward') + ' characers long');
+console.log(stringy.slice(15-chunkSize(stringy, 14,'backward'), 15) + ' is ' + chunkSize(stringy, 14,'backward') + ' characers long');
+
+
+
+
+
+
+/*
+	    
 var slashToOver = function(string){
     var numerator;
     var denominator;
@@ -182,7 +233,7 @@ var slashToOver = function(string){
 	    }
 	    else{
 		
-    
+ */   
 
 
 /* function tag template */
