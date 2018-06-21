@@ -174,14 +174,15 @@ var beginParen = function(string, stringLoc){
 var chunkSize = function(string, stringLoc, direction){
     var size = 0;
     var i = stringLoc;
-    if (direction == 'forward'){
+    if (direction == 'f'){ /* f is for forward */
 	for (i; i < string.length; i++){
 	    if( (string[i] == '(') || (string[i] == '{') ){
 		size += (endParen(string, i) - i) + 1;
 		i = endParen(string, i);
 	    }
 	    else if( (string[i] == '+') || (string[i] == '-') ||
-		     (string[i] == '/') || (string[i] == '*')  ){
+		     (string[i] == '/') || (string[i] == '*') ||
+		     (string[i] == ')') ){
 		break;
 	    }
 	    else{
@@ -190,14 +191,15 @@ var chunkSize = function(string, stringLoc, direction){
 	}
 	return(size);
     }
-    if (direction == 'backward'){
+    if (direction == 'b'){ /* b is for backward */
 	for(i; i >= 0; i--){
 	    if( (string[i] == ')') || (string[i] == '}') ){
 		size += (i - beginParen(string, i)) + 1;			    
 		i = beginParen(string, i);
 	    }
 	    else if( (string[i] == '+') || (string[i] == '-') ||
-		     (string[i] == '/') || (string[i] == '*') ){
+		     (string[i] == '/') || (string[i] == '*') ||
+		     (string[i] == '(') ){
 		break;
 	    }
 	    else{
@@ -210,30 +212,71 @@ var chunkSize = function(string, stringLoc, direction){
     return(null);
 }
 
-stringy = "2+sin(3+(4+pi))+23";
-console.log(stringy);
-console.log(stringy.slice(2, 2+chunkSize(stringy, 2,'forward')) + ' is ' + chunkSize(stringy, 2,'forward') + ' characers long');
-console.log(stringy.slice(15-chunkSize(stringy, 14,'backward'), 15) + ' is ' + chunkSize(stringy, 14,'backward') + ' characers long');
-
-
-
-
-
-
 /*
-	    
-var slashToOver = function(string){
-    var numerator;
-    var denominator;
+stringy = "256+sin(3+(4+pi))+23";
+console.log(stringy);
+console.log(chunkSize(stringy, 2, 'b'));
+console.log(stringy.slice(2, 2+chunkSize(stringy, 2,'f')) + ' is ' + chunkSize(stringy, 2,'f') + ' characers long');
+console.log(stringy.slice(15-chunkSize(stringy, 14,'b'), 15) + ' is ' + chunkSize(stringy, 14,'b') + ' characers long');
+*/
+
+var slashToFrac = function(string){
+    var num;
+    var sizeOfNum;
+    var numIndex;
+    var denom;
+    var sizeOfDenom;
+    var denomIndex;
+    var tempStr = "";
     var i = 0;
-    for(i; i < string.length; i++){
+    for (i; i < string.length; i++){
 	if (string[i] == '/'){
-	    if(string[i-1] != ')'){
-		numerator = string[i-2];
+	    if (string[i-1] != ')'){
+		sizeOfNum =  chunkSize(string, i-1,'b');
+		num = string.slice(i-sizeOfNum, i);
+		numIndex = i - sizeOfNum;
+
 	    }
 	    else{
-		
- */   
+		num = string.slice(beginParen(string, i-1), i);
+		numIndex = i - num.length;
+		num = '{'.concat(num.slice(1, num.length));
+		num = num.slice(0, num.length-1).concat('}');
+	    }
+
+	    if (string[i+1] != '('){
+		sizeOfDenom =  chunkSize(string, i+1,'f');
+		denomIndex = i + sizeOfDenom;
+		denom = string.slice(i+1, denomIndex+1);
+	    }
+	    else{
+		denom = string.slice(i+1, endParen(string, i)+1);
+		denomIndex = i + denom.length;
+		denom = '{'.concat(denom.slice(1, denom.length));
+		denom = denom.slice(0, denom.length-1).concat('}');				   	
+	    }
+	    console.log("num: " + num);
+	    console.log("denom: " + denom);
+	    
+	    string = string.slice(0, numIndex).concat("\\frac{" + num + "}{" + denom + "}" + string.slice(denomIndex+1, string.length));
+	    return(string);
+	}
+    }
+    return(null);
+}
+
+
+stringy = "1+1/(1+1/(1+1/(+1/(1+1))))";
+//stringy = "1/(43+34/(23-2)+5)";
+
+console.log(stringy);
+
+while (slashToFrac(stringy) != null){
+    stringy = slashToFrac(stringy);
+    console.log("\nstring is now: " + stringy);
+}
+
+console.log("\nfinal string is: " + stringy);
 
 
 /* function tag template */
