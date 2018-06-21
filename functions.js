@@ -176,8 +176,8 @@ var chunkSize = function(string, stringLoc, direction){
     var i = stringLoc;
     if (direction == 'forward'){
 	for (i; i < string.length; i++){
-	    if (string[i] == '('){
-		size += endParen(string, i) - i + 1;
+	    if( (string[i] == '(') || (string[i] == '{') ){
+		size += (endParen(string, i) - i) + 1;
 		i = endParen(string, i);
 	    }
 	    else if( (string[i] == '+') || (string[i] == '-') ||
@@ -192,8 +192,8 @@ var chunkSize = function(string, stringLoc, direction){
     }
     if (direction == 'backward'){
 	for(i; i >= 0; i--){
-	    if (string[i] == ')'){
-		size += i - beginParen(string, i) + 1;			    
+	    if( (string[i] == ')') || (string[i] == '}') ){
+		size += (i - beginParen(string, i)) + 1;			    
 		i = beginParen(string, i);
 	    }
 	    else if( (string[i] == '+') || (string[i] == '-') ||
@@ -206,7 +206,7 @@ var chunkSize = function(string, stringLoc, direction){
 	}
 	return(size);
     }
-    console.log("Something went wrong");
+    console.log("Something went wrong!");
     return(null);
 }
 
