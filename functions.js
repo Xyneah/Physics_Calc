@@ -2,13 +2,12 @@
    All the parsing helper functions will be stored here.
    Each function will come with a helpful tag for what it
    does, what it returns, and a short tester to see how
-   it works. LET THE FUNCTIONS BEGIN!
-*/
+   it works. LET THE FUNCTIONS BEGIN! */
 
 /*
    =======================================================
    rmSpaces is a cute function that does exactly what it 
-   sounds like it does; removes spaces from a string.
+   sounds like it does: removes spaces from a string.
 
    INPUT:
    STRING (string) - a string with spaces
@@ -171,10 +170,52 @@ var beginParen = function(string, stringLoc){
     return(null);
 }
 
+
+/*
+   =======================================================
+   chunkSize is a function that takes a string, a starting
+   location in the string, and the direction (forward or
+   backward) in which to search the string. The function
+   is then walked in the specified direction, and the size
+   is incremented accordingly. If the beginning parenthasis
+   if found when walking forward, or ending parenthasis 
+   when walking backwards, the contents of it are skipped
+   over, and the size is incremented by the size of the
+   contents skipped over. In short, stuff in parenthases
+   are counted as a chunk. Otherwise, a chunk is ended by
+   a mathematical operator, an ending parenthasis when
+   walking forward, beginning parenthasis when walking 
+   backward, or the beginning/end of the string is hit.
+   Once this happens, the size of the chunk is returned.
+ 
+   INPUT:
+   STRING (string) - string to walk
+   STRING (stringLoc) - starting location in the string
+   STRING (direction) - only two viable options. 'f' for
+                        forward, or 'b' for backward
+
+   RETURNS:
+   INT (size) - size of the chunk
+
+   *OR*
+
+   null - direction was entered incorrectly
+
+   ~~~~~~Functions and  Methods to learn more about~~~~~~
+
+   String Property: length
+   https://www.w3schools.com/Jsref/jsref_length_string.asp
+   =======================================================
+*/
+
 var chunkSize = function(string, stringLoc, direction){
     var size = 0;
     var i = stringLoc;
     if (direction == 'f'){ /* f is for forward */
+	
+	/* looping forward in the string. Checking first for
+	   a portion to skip over, then for an ending
+	   character, and incrementing if none are found. */
 	for (i; i < string.length; i++){
 	    if( (string[i] == '(') || (string[i] == '{') ){
 		size += (endParen(string, i) - i) + 1;
@@ -191,6 +232,7 @@ var chunkSize = function(string, stringLoc, direction){
 	}
 	return(size);
     }
+    /* same deal as above, but backwards */
     if (direction == 'b'){ /* b is for backward */
 	for(i; i >= 0; i--){
 	    if( (string[i] == ')') || (string[i] == '}') ){
@@ -208,17 +250,12 @@ var chunkSize = function(string, stringLoc, direction){
 	}
 	return(size);
     }
-    console.log("Something went wrong!");
+    console.log("Invalid direction entered. Enter either 'f' for forward, or 'b' for backward");
     return(null);
+    
 }
 
-/*
-stringy = "256+sin(3+(4+pi))+23";
-console.log(stringy);
-console.log(chunkSize(stringy, 2, 'b'));
-console.log(stringy.slice(2, 2+chunkSize(stringy, 2,'f')) + ' is ' + chunkSize(stringy, 2,'f') + ' characers long');
-console.log(stringy.slice(15-chunkSize(stringy, 14,'b'), 15) + ' is ' + chunkSize(stringy, 14,'b') + ' characers long');
-*/
+
 
 var slashToFrac = function(string){
     var num;
@@ -227,21 +264,19 @@ var slashToFrac = function(string){
     var denom;
     var sizeOfDenom;
     var denomIndex;
-    var tempStr = "";
     var i = 0;
     for (i; i < string.length; i++){
 	if (string[i] == '/'){
 	    if (string[i-1] != ')'){
 		sizeOfNum =  chunkSize(string, i-1,'b');
-		num = string.slice(i-sizeOfNum, i);
 		numIndex = i - sizeOfNum;
+		num = string.slice(i-sizeOfNum, i);
 
 	    }
 	    else{
 		num = string.slice(beginParen(string, i-1), i);
 		numIndex = i - num.length;
-		num = '{'.concat(num.slice(1, num.length));
-		num = num.slice(0, num.length-1).concat('}');
+		num = num.slice(1, num.length-1);
 	    }
 
 	    if (string[i+1] != '('){
@@ -252,31 +287,39 @@ var slashToFrac = function(string){
 	    else{
 		denom = string.slice(i+1, endParen(string, i)+1);
 		denomIndex = i + denom.length;
-		denom = '{'.concat(denom.slice(1, denom.length));
-		denom = denom.slice(0, denom.length-1).concat('}');				   	
+		denom = denom.slice(1, denom.length-1);				   	
 	    }
-	    console.log("num: " + num);
-	    console.log("denom: " + denom);
-	    
-	    string = string.slice(0, numIndex).concat("\\frac{" + num + "}{" + denom + "}" + string.slice(denomIndex+1, string.length));
-	    return(string);
+	    string = string.slice(0, numIndex).concat("\\frac{" + num + "}{" + denom + "}" +
+		     string.slice(denomIndex+1, string.length));
 	}
     }
-    return(null);
+    return(string);
 }
 
+console.log
 
-stringy = "1+1/(1+1/(1+1/(+1/(1+1))))";
-//stringy = "1/(43+34/(23-2)+5)";
+stringu = "32/45";
+stringv = "(400+2)/4";
+stringw = "500/(3+pi)";
+stringx = "(500+3)/(4+sin(pi))";
+stringy = "1/(43+34/(23-2)+5)";
+stringz = "1+1/(1+1/(1+1/(+1/(1+1))))";
 
-console.log(stringy);
+console.log(stringu + " becomes:");
+console.log(slashToFrac(stringu) + "\n");
+console.log(stringv + " becomes:");
+console.log(slashToFrac(stringv) + "\n");
+console.log(stringw + " becomes:");
+console.log(slashToFrac(stringw) + "\n");
+console.log(stringx + " becomes:");
+console.log(slashToFrac(stringx) + "\n");
+console.log(stringy + " becomes:");
+console.log(slashToFrac(stringy) + "\n");
+console.log(stringz + " becomes:");
+console.log(slashToFrac(stringz));
 
-while (slashToFrac(stringy) != null){
-    stringy = slashToFrac(stringy);
-    console.log("\nstring is now: " + stringy);
-}
 
-console.log("\nfinal string is: " + stringy);
+
 
 
 /* function tag template */

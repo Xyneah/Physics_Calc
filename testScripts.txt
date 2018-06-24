@@ -1,0 +1,140 @@
+/*
+console.log("\n~~~Test Script for rmSpaces~~~");
+
+var stringx = "I  A m  A  C u t e  S t r i n g !";  
+
+console.log("Before: " + stringx);
+console.log("After: " + rmSpaces(stringx));
+*/
+
+/*
+console.log("\n~~~Test Script for endParen~~~");
+
+var stringx = "3/(4+(5-2)";
+
+var stringy = "5*((1/23)+sin(2*pi*(5+4))+7)";
+
+console.log("\nTesting case of mismatched parenthases:");
+console.log("stringx: " + stringx);
+console.log(endParen(stringx, 2) + "\n");
+
+console.log("Testing case where strLoc (500) is way out of bounds:");
+console.log("stringy: " + stringy);
+console.log(endParen(stringy, 500) + "\n");
+
+console.log("Testing case where strLoc (-5) is negative:");
+console.log("stringy: " + stringy);
+console.log(endParen(stringy, -5) + "\n");
+
+
+console.log("\nTesting how endParen does parsing a string with " +
+	    "many layers of parenthasies by \niterating through " +
+	    "stringy. If a '(' is read, displays its end parenthais\n" +
+	    "along with everything in the middle.\n");
+console.log("stringy: " + stringy);
+for (var i = 0; i < stringy.length; i++){
+    if (stringy[i] == '('){
+	console.log(stringy.slice(i, endParen(stringy, i)+1));
+    }
+}
+*/
+
+/*
+console.log("\n~~~Test Script for beginParen~~~");
+
+var stringx = "3/4+(5-2+5))";
+
+var stringy = "5*((1/23)+sin(2*pi*(5+4))+7)";
+
+console.log("\nTesting case of mismatched parenthases:");
+console.log("stringx: " + stringx);
+console.log(beginParen(stringx, stringx.length) + "\n");
+
+console.log("Testing case where strLoc (500) is way out of bounds:");
+console.log("stringy: " + stringy);
+console.log(beginParen(stringy, 500) + "\n");
+
+console.log("Testing case where strLoc (-5) is negative:");
+console.log("stringy: " + stringy);
+console.log(beginParen(stringy, -5) + "\n");
+
+console.log("\nTesting how beginParen does parsing a string with " +
+	    "many layers of parenthasies by \niterating through " +
+	    "stringy. If a ')' is read, displays its beginning parenthais\n" +
+	    "along with everything in the middle.\n");
+console.log("stringy: " + stringy);
+for (var i = stringy.length; i > 0; i--){
+    if (stringy[i] == ')'){
+	console.log(stringy.slice(beginParen(stringy, i), i+1));
+    }
+}
+*/
+
+/*
+console.log("~~~Test script for chunkSize~~~");
+
+/* In this script, we demonstrate the utility of chunkSize. stringy has various
+   operators and we will see how chunkSize can calculate the size of various
+   segments, backwards and forwards. spacedStr and indexxStr are alligned so 
+   it is clear why the entry for each stringLoc was chosen */
+
+var stringy = "256+sin(3+(4+pi))+23";
+
+var spacedStr = "  2  5  6  +  s  i  n  (  3  +  (  4  +  p  i  )  )  +  2  3 ";
+var indexxStr = "|00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|";
+console.log("Input string: " + stringy);
+console.log("\nIndexed string:");
+console.log(spacedStr);
+console.log(indexxStr);
+
+
+console.log("\ngoing forwards:");
+console.log("256 is " + chunkSize(stringy, 0, 'f') + " characters long");
+console.log("\ngoing backwards:");
+console.log("256 is " + chunkSize(stringy, 2, 'b') + " characters long");
+console.log("\ngoing forwards:");
+console.log("sin(3+(4+pi)) is " + chunkSize(stringy, 4, 'f') + " characters long");
+console.log("\ngoing forwards:");
+console.log("(4+pi) is  "  + chunkSize(stringy, 10, 'f') + " characters long");
+console.log("\ngoing backwards:");
+console.log("(4+pi) is " + chunkSize(stringy, 15, 'b') + " characters long");
+console.log("\ngoing backwards:");
+console.log("sin(3+(4+pi)) is " + chunkSize(stringy, 16, 'b') + " characters long");
+console.log("\ngoing forwards:");
+console.log("23 is " + chunkSize(stringy, 18, 'f') + " characters long");
+console.log("\ngoing backwards:");
+console.log("23 is " + chunkSize(stringy, 19, 'b') + " characters long");
+console.log("\nFeeding it 'Q' for the direction to prove it doesn't work:");
+console.log("256 is " + chunkSize(stringy, 0, 'Q') + " characters long");
+*/
+
+
+
+/*
+
+console.log("~~~Test Script for slashToFrac~~~");
+
+//Here are several examples of slashToFrac in action. See how they turn out
+//at http://quicklatex.com   
+
+stringu = "32/45";
+stringv = "(400+2)/4";
+stringw = "500/(3+pi)";
+stringx = "(500+3)/(4+sin(pi))";
+stringy = "1/(43+34/(23-2)+5)";
+stringz = "1+1/(1+1/(1+1/(+1/(1+1))))";
+
+console.log(stringu + " becomes:");
+console.log(slashToFrac(stringu) + "\n");
+console.log(stringv + " becomes:");
+console.log(slashToFrac(stringv) + "\n");
+console.log(stringw + " becomes:");
+console.log(slashToFrac(stringw) + "\n");
+console.log(stringx + " becomes:");
+console.log(slashToFrac(stringx) + "\n");
+console.log(stringy + " becomes:");
+console.log(slashToFrac(stringy) + "\n");
+console.log(stringz + " becomes:");
+console.log(slashToFrac(stringz));
+
+*/

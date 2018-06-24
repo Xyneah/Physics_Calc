@@ -4,4 +4,4 @@ test: functions.js
 	node functions.js
 
 clean:
-	rm -f *~
+	rm -f *~ \#functions.js# \#testScripts.txt#
