@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+	<head>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-10" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+	});
+	</script>
+	<script type="text/javascript" async
+	src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+	</script>
+	
+	<title> testing </title>
+	</head>
+	
+	<style type="text/css">
+	#wrap {
+	width:1500px;
+	margin:0 auto;
+	}
+	#left_col {
+	float:left;
+	width:50%;
+	}
+	#right_col {
+	float:right;
+	width:50%;
+	}
+	</style>
+	
+	<body style="font-size:10; width:800px">
+	
+	<h1 align="center"> Physics workspace </h1>
+	
+	<div id="wrap">
+	<div id="left_col">
+	
+	<div id="display" class="left" align="center" style="font-size:25px;">
+	Example: $3^5 g \over 2$</div>
+	
+	<br>
+	
+	<div class="left" align="center">
+	History
+	<div id="history" align="left" style="height:450px; width:400px; border:1px solid; overflow:auto;">
+	</div></div>
+	
+	<br>
+	
+	<div align="center">
+	Enter: <input type="text" id="number" size="54" placeholder="Enter equation here"
+	onchange="drawEqn(); logHist(); showAns()">
+	<input type="button" value="go" onclick="drawEqn();logHist(); showAns()">
+	</div>
+	
+	<div align="center">
+	<p>
+	<h4>Instructions:</h4>
+	Welcome to this physics calculator! Here are some useful tips to make the most of this
+	magical journey.
+	<br><br>
+	Operation Key
+	<table cellpadding="5" border="1" align="center">
+	<tr>
+	<td> + : addition</td> <td> - : subtraction </td> <td> * : multiplication </td> <td> / : division </td> <td> ^ : exponents </td> <td> E : *10^ </td>
+	</tr>
+	<tr>
+	<td> sin() : sine </td> <td> cos() : cosine() </td> <td> tan() : tangent() </td> <td> csc() : cosecant()</td> <td> sec() : secant() </td> <td> cot() : cotangent() </td>
+	</tr>
+	</table>
+	</div>
+	</div>
+	
+	
+	<div id="right_col">
+	<div id="answer" class="right" align="left" style="font-size: 25px">Answer: 1190.7</div>
+	
+	
+	<div style="height:600px; overflow:auto;">
+	<h3>Table of Constants!</h3>
+	Physical Constants:
+	<table border="1">
+	<tr>
+	<td>You type :</td>
+	<td>name :</td>
+	<td>value :</td>
+	<td>units :</td>
+	</tr>
+	<tr>
+	<td>pi</td>
+	<td>$\pi$</td>
+	<td>$3.14159...$</td>
+	<td>N/A</td>
+	</tr>
+	<tr>
+	<td>c</td>
+	<td>Speed of Light</td>
+	<td>$3 * 10^8$</td>
+	<td>$m \over s$</td>
+	</tr>
+	<tr>
+	<td>g</td>
+	<td>Gravitational Acceleration (earth)</td>
+	<td>$9.8$</td>
+	<td>$m \over s^2$</td>
+	</tr>
+	<tr>
+	<td>G</td>
+	<td>Gravitational Constant</td>
+	<td>$6.673 * 10^{-11}$</td>
+	<td>$ N*m^2 \over kg^2$</td>
+	</tr>
+	<tr>
+	<td>Na</td>
+	<td>Avogadro Constant</td>
+	<td>$6.022 * 10^{23}$</td>
+	<td>$mol^{-1}$</td>
+	</tr>
+	<tr>
+	<td>hj</td>
+	<td>Plank Constant (joules)</td>
+	<td>$6.626 * 10^{-34}$</td>
+	<td>$J * s$</td>
+	</tr>
+	<tr>
+	<td>hev</td>
+	<td>Plank Constant (ev)</td>
+	<td>$4.136 * 10^{-15}$</td>
+	<td>$eV * s$</td>
+	</tr>
+	<tr>
+	<td>e</td>
+	<td>Elementary Charge</td>
+	<td>$1.602 * 10^{-19}$</td>
+	<td>$C$</td>
+	</tr>
+	<tr>
+	<td>Me</td>
+	<td>Electron Mass</td>
+	<td>$1.109 * 10^{-31}$</td>
+	<td>$kg$</td>
+	</tr>
+	<tr>
+	<td>Mp</td>
+	<td>Proton Mass</td>
+	<td>$1.673 * 10^{-27}$</td>
+	<td>$kg$</td>
+	</tr>
+	<tr>
+	<td>Mn</td>
+	<td>Neutron Mass</td>
+	<td>$1.675 * 10^{-27}$</td>
+	<td>$kg$</td>
+	</tr>
+	</table>
+	</div>
+	
+	</div>
+	</div>
+	
+	</body>
+	<script>
+	//Display data
+	//On the display end of the calculator, the result must be displayed in terms of latex notation. Below
+	//is a dictionary, dispDat that holds the relation between the result and how it should be displayed.
+	//dispDatArr holds only the keys, and is used when iterating through the equation.
+	dispDat = {"E":"*10^", "/":"\\over ", "(":"{", ")":"}", "Na":"{N_a}", "hj":"h", "hev":"h", "Me":"{M_e}",
+	"Mp":"{M_p}", "Mn":"{M_n}", "pi":"\\pi"}
+	dispDatArr = ["E", "pi", "/", "(", ")", "Na", "hj", "hev", "Me", "Mp", "Mn"]
+	
+	
+	//Puts dispDatArr in order from longest to shortest. This way, when parsing through the inputted
+	//equation, values are not mixed up. For example, hev will not be confused with e because hev will
+	//be handled first.
+	dispDatArr = dispDatArr.sort(function(a, b) {
+	return b.length - a.length || a.localeCompare(b);
+	});
+	
+	//Evaluation data
+	//Quite similar to Display data, only this time it is on the calculation side. In the dictionary,
+	//the key is the user given information, and the value is how the calculator should read it, and
+	//corresponding array functions the same as well.
+	evalDat = {"sin":"Math.sin", "cos":"Math.cos", "tan":"Math.tan", "pi":"Math.PI", "c":"3e8", "g":"9.8", "G":"6.673e-11", "Na":"6.022e23", "hj":"6.626e-34",
+	"HEV":"4.136e-15", "e":"1.602e-19", "ME":"1.109e-31", "Mp":"1.673e-27", "Mn":"1.675e-27"}
+	evalDatArr = ["sin", "cos", "tan", "g", "pi", "G", "Na", "hj", "HEV", "ME", "Mp", "Mn"]
+	
+	//You may have noticed that some of the keys in evalDat are in all caps, and that there's a whole
+	//array for thingsWithE. Because the elementary charge is e and *10^(x) is E, the solution is to put
+	//everything else containing an e like HEV in all caps until the very end to avoid mix-ups. Each term
+	//that shows up in thingsWithE will be put to upper case to be evaluated, and then returned to lower
+	//case when the chance for mix-up is avoided.
+	//darn elementary charge...
+	
+	thingsWithE = ["hev", "Me"]
+	
+	
+	trigTerms = [/sin\((.*?)\)/, /cos\((.*?)\)/, /tan\((.*?)\)/]
+	
+	evalDatArr = evalDatArr.sort(function(a, b) {
+	return b.length - a.length || a.localeCompare(b);
+	});
+	evalDatArr.unshift("e")
+	
+	var findBounds = function(str){
+	for (count; count <= str.length; count ++){
+	if (str[count] == "("){
+	beginParen ++
+	}
+	else if (str[count] == ")"){
+	endParen ++
+	}
+	
+	if (endParen == beginParen){
+	return count
+	}
+	
+	}
+	}
+	
+	parseEval = function(string){
+	if (/\^/g.test(string) === true){
+	string = string.replace(/\^/g, "**")
+	}
+	if (/E/g.test(string) === true){
+	string = string.replace(/E/g, "*10**")
+	}
+	thingsWithE.forEach(function(thing){
+	treat = new RegExp(thing, "g")
+	if (treat.test(string) === true){
+	string = string.replace(thing, thing.toUpperCase())
+	}
+	})
+	evalDatArr.forEach(function(elem){
+	exp = new RegExp(elem, "g")
+	if (exp.test(string) === true){
+	string = string.replace(exp, evalDat[elem])
+	}
+	})
+	if(/c\W/g.test(string) === true){
+	string = string.replace(/c\W/g, evalDat["c"])
+	}
+	if(/c$/g.test(string) === true){
+	console.log("true")
+	string = string.replace(/c$/g, evalDat["c"])
+	}
+	console.log(string)
+	try {
+	result = eval(string)
+	}
+	catch(err){
+	result = "Something went wrong! Try checking your notation."
+	}
+	return result
+	}
+	
+	
+	function drawEqn(){
+	eqn = document.getElementById("number");
+	disp = document.getElementById("display");
+	newEqn = dispParse(eqn.value)
+	borderArr = ["$", newEqn, "$"]
+	newEqn = borderArr.join(" ")
+	disp.innerHTML = newEqn
+	MathJax.Hub.Queue(["Typeset",MathJax.Hub,"display"]);
+	}
+	
+	var trigDeal = function(str, trigArray){
+	trigTerms.forEach(function(elem){
+	while (elem.test(str) === true){
+	meaning = elem.exec(str)
+	count = meaning.index + 4
+	beginParen = 1
+	endParen = 0
+	term = str.slice(count, findBounds(str))
+	newterm = "[" + term + "]"
+	str = str.replace(elem, str.slice(meaning.index, meaning.index+3) + newterm)
+	str = str.replace(/\]\)/, "]")
+	}
+	})
+	return str
+	}
+	
+	
+	dispParse = function(str){
+	str = trigDeal(str, trigTerms)
+	dispDatArr.forEach(function(elem){
+	if (elem == "(" || elem == ")"){
+	var exp = new RegExp("\\" + elem, "g")
+	}
+	else{
+	var exp = new RegExp(elem, "g")
+	}
+	while (exp.test(str) === true){
+	str = str.replace(elem, dispDat[elem])
+	}
+	})
+	str = str.replace(/\[/g, "(")
+	str = str.replace(/\]/g, ")")
+	return str
+	}
+	
+	showAns = function(){
+	ans = document.getElementById("answer")
+	eqn = document.getElementById("number")
+	ans.innerHTML = "Answer: " + parseEval(eqn.value)
+	
+	}
+	
+	logHist = function(){
+	histBox = document.getElementById("history")
+	histBox.innerHTML += eqn.value + "<br>"
+	}
+	</script>
+	</html>
