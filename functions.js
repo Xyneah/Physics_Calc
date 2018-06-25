@@ -256,39 +256,85 @@ var chunkSize = function(string, stringLoc, direction){
 }
 
 
+/*
+   =======================================================
+   slashToFrac converts 'numerator/denominator' (what a
+   user would input for division, and converts it to 
+   '\frac{numerator}{denominator}' LaTeX notation. This 
+   function iterates through the string, and if a '/' is
+   found, goes through the following process. First the
+   numerator is found. If the numerator is in parenthases, 
+   the contents are declared the numerator and the
+   parenthases are trimmed. If not, the preceeding chunk
+   is declared the numerator. The size and index of the
+   beginning of the numerator are stored, and used to
+   construct the final string. The same process is done
+   for the denominator, except for the fact that it is the
+   END of the denominator that is saved. Then the string
+   is reconstructed in this order:
+
+   1. Previous string before '/'
+   2. \frac{numerator}{denominator}
+   3. Portion of original string after the denominator
+
+   This process is repeated until no more '/' exists, and
+   the modified string is returned.
+
+   INPUT:
+   STRING (string) - original string to be parsed
+   
+   RETURNS:
+   STRING (string) - string after parsing
+   
+   ~~~~~~Functions and  Methods to learn more about~~~~~~
+   String Property: length
+   https://www.w3schools.com/Jsref/jsref_length_string.asp
+
+   String Method: string.slice()
+   https://www.w3schools.com/jsref/jsref_slice_string.asp
+
+   String Method: string.concat()
+   https://www.w3schools.com/jsref/jsref_concat_string.asp
+   =======================================================
+*/
 
 var slashToFrac = function(string){
-    var num;
-    var sizeOfNum;
-    var numIndex;
-    var denom;
-    var sizeOfDenom;
-    var denomIndex;
+    var num; /* numerator */
+    var sizeOfNum; /* character length of numerator */
+    var numIndex; /* where in the string the numerator BEGINS */
+    
+    /* similar pattern for denominator */
+    var denom; /* denominator */
+    var sizeOfDenom; /* character length of denominator */
+    var denomIndex; /* where in the string the denominator ENDS */
     var i = 0;
     for (i; i < string.length; i++){
 	if (string[i] == '/'){
+	    /* case where the numerator is in parenthases */
 	    if (string[i-1] != ')'){
 		sizeOfNum =  chunkSize(string, i-1,'b');
 		numIndex = i - sizeOfNum;
 		num = string.slice(i-sizeOfNum, i);
-
 	    }
 	    else{
+		/* case where numerator is not in parenthases */
 		num = string.slice(beginParen(string, i-1), i);
 		numIndex = i - num.length;
 		num = num.slice(1, num.length-1);
 	    }
-
+	    /* case where denominator is in parenthases */
 	    if (string[i+1] != '('){
 		sizeOfDenom =  chunkSize(string, i+1,'f');
 		denomIndex = i + sizeOfDenom;
 		denom = string.slice(i+1, denomIndex+1);
 	    }
 	    else{
+		/* case where denominator is not in parenthases */
 		denom = string.slice(i+1, endParen(string, i)+1);
 		denomIndex = i + denom.length;
 		denom = denom.slice(1, denom.length-1);				   	
 	    }
+	    /* reconstruction of the string */
 	    string = string.slice(0, numIndex).concat("\\frac{" + num + "}{" + denom + "}" +
 		     string.slice(denomIndex+1, string.length));
 	}
@@ -296,30 +342,17 @@ var slashToFrac = function(string){
     return(string);
 }
 
-console.log
 
-stringu = "32/45";
-stringv = "(400+2)/4";
-stringw = "500/(3+pi)";
-stringx = "(500+3)/(4+sin(pi))";
-stringy = "1/(43+34/(23-2)+5)";
-stringz = "1+1/(1+1/(1+1/(+1/(1+1))))";
+/*
+var squareRoot = function(string){
+    var root = /sqrt/;
+*/    
 
-console.log(stringu + " becomes:");
-console.log(slashToFrac(stringu) + "\n");
-console.log(stringv + " becomes:");
-console.log(slashToFrac(stringv) + "\n");
-console.log(stringw + " becomes:");
-console.log(slashToFrac(stringw) + "\n");
-console.log(stringx + " becomes:");
-console.log(slashToFrac(stringx) + "\n");
-console.log(stringy + " becomes:");
-console.log(slashToFrac(stringy) + "\n");
-console.log(stringz + " becomes:");
-console.log(slashToFrac(stringz));
-
-
-
+var stringy = "sqrt(x) + sqrt(y)";
+var root = /sqrt/g;
+console.log("before: " + stringy);
+stringy = stringy.replace(root, "OMG");
+console.log("after: " + stringy);
 
 
 /* function tag template */
