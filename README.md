@@ -1,3 +1,3 @@
 # Physics_Calc
 
-I am making a webpage calculator with commonly used physics constants pre-programmed into it. I attempted this for one of my intro programming classes, and 
+I am making a webpage calculator with commonly used physics constants pre-programmed into it, that also displays the equation as one would write it. I attempted this a while ago for one of my intro programming classes, see physicsCalc_draft1.html, but it's buggy and in need of several improvements. Having had more practice writing code between then and now, I now see that my first draft was a hot mess of logic spaghetti. I'm starting over and making a neatly layered logic sandwich. 
