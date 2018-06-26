@@ -197,10 +197,7 @@ var beginParen = function(string, stringLoc){
    RETURNS:
    INT (size) - size of the chunk
 
-   *OR*
-
-   null - direction was entered incorrectly
-
+  
    ~~~~~~Functions and  Methods to learn more about~~~~~~
 
    String Property: length
@@ -298,7 +295,7 @@ var chunkSize = function(string, stringLoc, direction){
    =======================================================
 */
 
-var slashToFrac = function(string){
+ var slashToFrac = function(string){
     var num; /* numerator */
     var sizeOfNum; /* character length of numerator */
     var numIndex; /* where in the string the numerator BEGINS */
@@ -310,26 +307,26 @@ var slashToFrac = function(string){
     var i = 0;
     for (i; i < string.length; i++){
 	if (string[i] == '/'){
-	    /* case where the numerator is in parenthases */
+	    /* case where the numerator is not in parenthases */
 	    if (string[i-1] != ')'){
 		sizeOfNum =  chunkSize(string, i-1,'b');
 		numIndex = i - sizeOfNum;
 		num = string.slice(i-sizeOfNum, i);
 	    }
 	    else{
-		/* case where numerator is not in parenthases */
+		/* case where numerator is in parenthases */
 		num = string.slice(beginParen(string, i-1), i);
 		numIndex = i - num.length;
 		num = num.slice(1, num.length-1);
 	    }
-	    /* case where denominator is in parenthases */
+	    /* case where denominator is not in parenthases */
 	    if (string[i+1] != '('){
 		sizeOfDenom =  chunkSize(string, i+1,'f');
 		denomIndex = i + sizeOfDenom;
 		denom = string.slice(i+1, denomIndex+1);
 	    }
 	    else{
-		/* case where denominator is not in parenthases */
+		/* case where denominator is in parenthases */
 		denom = string.slice(i+1, endParen(string, i)+1);
 		denomIndex = i + denom.length;
 		denom = denom.slice(1, denom.length-1);				   	
@@ -339,19 +336,46 @@ var slashToFrac = function(string){
 		     string.slice(denomIndex+1, string.length));
 	}
     }
+     return(string);
+}
+
+var squareRoot = function(string){
+    var oldStr = string;
+    var newStr = "";
+    var beginRoot;
+    var endRoot;
+    var contentIndex;
+    var contents;
+    var safety = 0;
+    oldStr = string.replace(/sqrt/g, "\\sqrt");
+    while ((/\\sqrt/.test(oldStr) == true) && (safety<5)){
+	beginRoot = oldStr.match(/\\sqrt/).index;
+	endRoot = endParen(oldStr, beginRoot);
+	contentIndex = beginParen(oldStr, endRoot);
+	contents = oldStr.slice(contentIndex + 1, endRoot);
+	newStr = newStr.concat(oldStr.slice(0, contentIndex) + '{' + contents + '}');
+	oldStr = oldStr.slice(endRoot+1, oldStr.length);
+	/*console.log("first match: " + beginRoot);
+	console.log("end of root: " + endRoot);
+	console.log("contents: " + contents);
+	console.log("newStr: " + newStr);
+	console.log("oldStr: " + oldStr); */
+	safety++;
+    }
+    string = newStr.concat(oldStr);
+    //console.log("passes: " + safety);
     return(string);
 }
 
+   
+var stringy = "cobras + sqrt[3](y+(7+x))/sqrt(x)";
 
-/*
-var squareRoot = function(string){
-    var root = /sqrt/;
-*/    
-
-var stringy = "sqrt(x) + sqrt(y)";
-var root = /sqrt/g;
 console.log("before: " + stringy);
-stringy = stringy.replace(root, "OMG");
+stringy = rmSpaces(stringy);
+console.log(stringy);
+stringy = slashToFrac(stringy);
+console.log(stringy);
+stringy = squareRoot(stringy);
 console.log("after: " + stringy);
 
 
