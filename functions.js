@@ -98,7 +98,7 @@ var endParen = function(string, stringLoc){
 	    endParenth++;
 	    if (endParenth == beginParenth){
 		endLoc = i;
-		return(endLoc);
+ 		return(endLoc);
 	    }
 	}
     }
@@ -298,7 +298,8 @@ var chunkSize = function(string, stringLoc, direction){
  var slashToFrac = function(string){
     var num; /* numerator */
     var sizeOfNum; /* character length of numerator */
-    var numIndex; /* where in the string the numerator BEGINS */
+     var numIndex; /* where in the string the numerator BEGINS */
+     var extra;
     
     /* similar pattern for denominator */
     var denom; /* denominator */
@@ -316,8 +317,16 @@ var chunkSize = function(string, stringLoc, direction){
 	    else{
 		/* case where numerator is in parenthases */
 		num = string.slice(beginParen(string, i-1), i);
-		numIndex = i - num.length;
-		num = num.slice(1, num.length-1);
+		part =  string.slice(beginParen(string, i-1), i);
+		console.log("Beginning paren: " + beginParen(string, i-1));
+		extra = chunkSize(string, beginParen(string, i-1)-1, 'b');
+		numIndex = i - num.length - extra;
+		num = string.slice(numIndex, numIndex+extra).concat(num);
+		console.log("num index: " + numIndex);
+		if (extra == 0 ){
+		    num = num.slice(1, num.length-1); /* trimming parenthases */
+		}
+		console.log("numerator: " + num);
 	    }
 	    /* case where denominator is not in parenthases */
 	    if (string[i+1] != '('){
@@ -329,7 +338,7 @@ var chunkSize = function(string, stringLoc, direction){
 		/* case where denominator is in parenthases */
 		denom = string.slice(i+1, endParen(string, i)+1);
 		denomIndex = i + denom.length;
-		denom = denom.slice(1, denom.length-1);				   	
+		denom = denom.slice(1, denom.length-1);	/* trimming parenthases */			   	
 	    }
 	    /* reconstruction of the string */
 	    string = string.slice(0, numIndex).concat("\\frac{" + num + "}{" + denom + "}" +
@@ -347,28 +356,36 @@ var squareRoot = function(string){
     var contentIndex;
     var contents;
     var safety = 0;
-    oldStr = string.replace(/sqrt/g, "\\sqrt");
-    while ((/\\sqrt/.test(oldStr) == true) && (safety<5)){
-	beginRoot = oldStr.match(/\\sqrt/).index;
-	endRoot = endParen(oldStr, beginRoot);
-	contentIndex = beginParen(oldStr, endRoot);
-	contents = oldStr.slice(contentIndex + 1, endRoot);
-	newStr = newStr.concat(oldStr.slice(0, contentIndex) + '{' + contents + '}');
-	oldStr = oldStr.slice(endRoot+1, oldStr.length);
-	/*console.log("first match: " + beginRoot);
-	console.log("end of root: " + endRoot);
-	console.log("contents: " + contents);
-	console.log("newStr: " + newStr);
-	console.log("oldStr: " + oldStr); */
-	safety++;
-    }
+    var keepGoing = true;
+    //oldStr = string.replace(/sqrt/g, "\\sqrt");
+    console.log(/\\sqrt/.exec(oldStr));
+    //while ((keepGoing == true) && (safety < 10)){
+	while ((/sqrt/.test(oldStr) == true)){
+	    beginRoot = oldStr.match(/sqrt/).index;
+	    endRoot = endParen(oldStr, beginRoot);
+	    contentIndex = beginParen(oldStr, endRoot);
+	    contents = oldStr.slice(contentIndex + 1, endRoot);
+	    if (/sqrt/.test(contents) == true){
+		console.log("Inception!!!");
+		contents = squareRoot(contents);
+	    }
+	    newStr = newStr.concat(oldStr.slice(0, contentIndex) + '{' + contents + '}');
+	    oldStr = oldStr.slice(endRoot+1, oldStr.length);
+	    console.log("first match: " + beginRoot);
+	    console.log("end of root: " + endRoot);
+	    console.log("contents: " + contents);
+	    console.log("newStr: " + newStr);
+	    console.log("oldStr: " + oldStr);
+	}
     string = newStr.concat(oldStr);
-    //console.log("passes: " + safety);
+    safety++;
+    console.log("passes: " + safety);
+    string = string.replace(/sqrt/, "\\sqrt");
     return(string);
 }
 
    
-var stringy = "cobras + sqrt[3](y+(7+x))/sqrt(x)";
+var stringy = "sqrt[3](1+sqrt[3](1+sqrt[3](1+sqrt[3](x))))";
 
 console.log("before: " + stringy);
 stringy = rmSpaces(stringy);
@@ -376,6 +393,7 @@ console.log(stringy);
 stringy = slashToFrac(stringy);
 console.log(stringy);
 stringy = squareRoot(stringy);
+//stringy = squareRoot(stringy);
 console.log("after: " + stringy);
 
 
